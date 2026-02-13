@@ -7,7 +7,6 @@ def tfidf_vectorizer(documents):
 
     N = len(documents)
 
-    # ---------- Tokenize ----------
     tokenized = []
     for doc in documents:
         if not isinstance(doc, str):
@@ -15,7 +14,6 @@ def tfidf_vectorizer(documents):
         tokens = doc.lower().split()
         tokenized.append(tokens)
 
-    # ---------- Build vocabulary ----------
     vocab = sorted(set(word for doc in tokenized for word in doc))
     V = len(vocab)
 
@@ -24,7 +22,6 @@ def tfidf_vectorizer(documents):
 
     word_to_idx = {w: i for i, w in enumerate(vocab)}
 
-    # ---------- Term Frequency matrix ----------
     tf = np.zeros((N, V), dtype=float)
 
     for i, doc in enumerate(tokenized):
@@ -37,7 +34,6 @@ def tfidf_vectorizer(documents):
             if word in word_to_idx:
                 tf[i, word_to_idx[word]] = count / total
 
-    # ---------- Document Frequency ----------
     df = np.zeros(V, dtype=float)
 
     for doc in tokenized:
@@ -46,10 +42,8 @@ def tfidf_vectorizer(documents):
             if word in word_to_idx:
                 df[word_to_idx[word]] += 1
 
-    # ---------- IDF ----------
     idf = np.log(N / df)
 
-    # ---------- TF-IDF ----------
     tfidf = tf * idf
 
     return tfidf, vocab
